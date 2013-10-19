@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains test cases for client cache.
@@ -27,11 +28,11 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
   /**
    * Check whether or not a cache entry exists.
    *
-   * @param $cid
+   * @param string $cid
    *   The cache id.
-   * @param $var
+   * @param  string $var
    *   The variable the cache should contain.
-   * @param $bin
+   * @param  string $bin
    *   The bin the cache item was stored in.
    * @return bool
    *   TRUE on pass, FALSE on fail.
@@ -49,13 +50,13 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
   /**
    * Assert or a cache entry exists.
    *
-   * @param $message
+   * @param string $message
    *   Message to display.
-   * @param $var
+   * @param string $var
    *   The variable the cache should contain.
-   * @param $cid
+   * @param string $cid
    *   The cache id.
-   * @param $bin
+   * @param string $bin
    *   The bin the cache item was stored in.
    */
   protected function assertCacheExists($message, $var = NULL, $cid = NULL, $bin = NULL) {
@@ -75,11 +76,11 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
   /**
    * Assert or a cache entry has been removed.
    *
-   * @param $message
+   * @param string $message
    *   Message to display.
-   * @param $cid
+   * @param string $cid
    *   The cache id.
-   * @param $bin
+   * @param string  $bin
    *   The bin the cache item was stored in.
    */
   function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
@@ -96,7 +97,8 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
 
   /**
    * Perform the general wipe.
-   * @param $bin
+   *
+   * @param string $bin
    *   The bin to perform the wipe on.
    */
   protected function generalWipe($bin = NULL) {
@@ -107,9 +109,13 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
     cache_clear_all(NULL, $bin);
   }
 
-  function resetVariables() {
+  /**
+   * Resets the cache variable.
+   */
+  protected function resetVariables() {
     _cache_get_object($this->default_bin)->reloadVariables();
   }
+
 }
 
 class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
@@ -124,7 +130,7 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
     return array(
       'name' => 'Cookie cache saving test',
       'description' => 'Check our variables are saved and restored the right way.',
-      'group' => 'Client Cache'
+      'group' => 'Client Cache',
     );
   }
 
@@ -136,35 +142,35 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
   }
 
   /**
-   * Test the saving and restoring of a string.
+   * Tests the saving and restoring of a string.
    */
   public function testString() {
     $this->checkVariable($this->randomName(100));
   }
 
   /**
-   * Test the saving and restoring of an integer.
+   * Tests the saving and restoring of an integer.
    */
   public function testInteger() {
     $this->checkVariable(100);
   }
 
   /**
-   * Test the saving and restoring of a double.
+   * Tests the saving and restoring of a double.
    */
   public function testDouble() {
     $this->checkVariable(1.29);
   }
 
   /**
-   * Test the saving and restoring of an array.
+   * Tests the saving and restoring of an array.
    */
   public function testArray() {
     $this->checkVariable(array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6')));
   }
 
   /**
-   * Test the saving and restoring of an object.
+   * Tests the saving and restoring of an object.
    */
   public function testObject() {
     $test_object = new stdClass();
@@ -177,14 +183,17 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
     $this->assertTrue(isset($cache) && $cache == $test_object, t('Object is saved and restored properly.'));
   }
 
-  /*
-   * Check or a variable is stored and restored properly.
-   **/
-  function checkVariable($var) {
+  /**
+   * Checks variable in cache.
+   *
+   * @param string $var
+   */
+  protected function checkVariable($var) {
     cache_set('test_var', $var, 'cache_client');
     $cache = cache_get('test_var', 'cache_client');
     $this->assertTrue(isset($cache) && $cache === $var, t('@type is saved and restored properly.', array('@type' => ucfirst(gettype($var)))));
   }
+
 }
 
 /**
@@ -192,6 +201,12 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
  */
 class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
 
+  /**
+   * Test case meta information.
+   *
+   * @return array
+   *   An array of test case details.
+   */
   public static function getInfo() {
     return array(
       'name' => 'Fetching Cookie cache items',
@@ -205,7 +220,7 @@ class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
   }
 
   /**
-   * Test cache_get().
+   * Tests cache_get().
    */
   public function testCacheMultiple() {
     $item1 = $this->randomName(10);
@@ -238,9 +253,16 @@ class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
 }
 
 /**
- * Test cache clearing methods.
+ * Tests cache clearing methods.
  */
 class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
+
+  /**
+   * Test case meta information.
+   *
+   * @return array
+   *   An array of test case details.
+   */
   public static function getInfo() {
     return array(
       'name' => 'Cache clear test',
@@ -249,6 +271,9 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->default_value = $this->randomName(10);
@@ -256,14 +281,14 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
 
 
   /**
-   * Test clearing the cache with a cid, no cache lifetime.
+   * Tests clearing the cache with a cid, no cache lifetime.
    */
   public function testClearCidNoLifetime() {
     $this->clearCidTest();
   }
 
   /**
-   * Test clearing the cache with a cid, with cache lifetime.
+   * Tests clearing the cache with a cid, with cache lifetime.
    */
   public function testClearCidLifetime() {
     variable_set('cache_lifetime', 6000);
@@ -272,7 +297,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
 
 
   /**
-   * Test full bin flushes with cache lifetime.
+   * Tests full bin flushes with cache lifetime.
    */
   public function testClearCacheLifetime() {
     variable_set('cache_lifetime', 600);
@@ -326,7 +351,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
   }
 
   /**
-   * Test clearing using a cid.
+   * Tests clearing using a cid.
    */
   protected function clearCidTest() {
     cache_set('test_cid_clear', $this->default_value, $this->default_bin);
