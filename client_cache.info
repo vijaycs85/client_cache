@@ -1,0 +1,5 @@
+name = Client Cache
+description = Provides functionality to handle data storage on client side.
+core = 7.x
+package = Performance and scalability
+files[] = "tests/client_cache.cookie.test"
