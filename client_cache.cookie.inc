@@ -10,7 +10,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
   /**
    * {@inheritdoc}
    */
-  function __construct($bin) {
+  public function __construct($bin) {
     $this->bin = $bin;
   }
 
@@ -73,7 +73,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
   /**
    * {@inheritdoc}
    */
-  function clear($cid_raw = NULL, $wildcard = FALSE) {
+  public function clear($cid_raw = NULL, $wildcard = FALSE) {
     list($cid, $path) = self::getPathFromCid($cid_raw);
     if (self::get($cid)) {
       self::set($cid_raw, NULL, -1000);
@@ -91,7 +91,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
    * Checks that items are either permanent or did not expire, and decodes
    * data as appropriate.
    *
-   * @param  mixed $cache
+   * @param mixed $cache
    *   An item loaded from cache_get() or cache_get_multiple().
    *
    * @return mixed
