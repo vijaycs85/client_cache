@@ -197,6 +197,7 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
    * Checks variable in cache.
    *
    * @param string $var
+   *   A string variable.
    */
   protected function checkVariable($var) {
     cache_set('test_var', $var, 'cache_client');

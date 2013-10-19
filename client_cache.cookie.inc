@@ -74,7 +74,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
    * {@inheritdoc}
    */
   public function clear($cid_raw = NULL, $wildcard = FALSE) {
-    list($cid, $path) = self::getPathFromCid($cid_raw);
+    list($cid, ) = self::getPathFromCid($cid_raw);
     if (self::get($cid)) {
       self::set($cid_raw, NULL, -1000);
     }
