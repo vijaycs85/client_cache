@@ -12,7 +12,10 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
   protected $default_cid = 'test_temporary';
   protected $default_value = 'ClientCacheCookieTest';
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     variable_set("cache_flush_$this->default_bin", 0);
@@ -109,7 +112,14 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
   }
 }
 
-class ClientCacheCookieSavingCase extends MemcacheTestCase {
+class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
+
+  /**
+   * Test case meta information.
+   *
+   * @return array
+   *   An array of test case details.
+   */
   public static function getInfo() {
     return array(
       'name' => 'Cookie cache saving test',
@@ -118,42 +128,45 @@ class ClientCacheCookieSavingCase extends MemcacheTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
   }
 
   /**
    * Test the saving and restoring of a string.
    */
-  function testString() {
+  public function testString() {
     $this->checkVariable($this->randomName(100));
   }
 
   /**
    * Test the saving and restoring of an integer.
    */
-  function testInteger() {
+  public function testInteger() {
     $this->checkVariable(100);
   }
 
   /**
    * Test the saving and restoring of a double.
    */
-  function testDouble() {
+  public function testDouble() {
     $this->checkVariable(1.29);
   }
 
   /**
    * Test the saving and restoring of an array.
    */
-  function testArray() {
+  public function testArray() {
     $this->checkVariable(array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6')));
   }
 
   /**
    * Test the saving and restoring of an object.
    */
-  function testObject() {
+  public function testObject() {
     $test_object = new stdClass();
     $test_object->test1 = $this->randomName(100);
     $test_object->test2 = 100;
@@ -187,14 +200,14 @@ class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 
   /**
    * Test cache_get().
    */
-  function testCacheMultiple() {
+  public function testCacheMultiple() {
     $item1 = $this->randomName(10);
     $item2 = $this->randomName(10);
     cache_set('test:item1', $item1, $this->default_bin);
@@ -236,8 +249,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
     );
   }
 
-  function setUp() {
-
+  protected function setUp() {
     parent::setUp();
     $this->default_value = $this->randomName(10);
   }
@@ -246,14 +258,14 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
   /**
    * Test clearing the cache with a cid, no cache lifetime.
    */
-  function testClearCidNoLifetime() {
+  public function testClearCidNoLifetime() {
     $this->clearCidTest();
   }
 
   /**
    * Test clearing the cache with a cid, with cache lifetime.
    */
-  function testClearCidLifetime() {
+  public function testClearCidLifetime() {
     variable_set('cache_lifetime', 6000);
     $this->clearCidTest();
   }
@@ -262,7 +274,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
   /**
    * Test full bin flushes with cache lifetime.
    */
-  function testClearCacheLifetime() {
+  public function testClearCacheLifetime() {
     variable_set('cache_lifetime', 600);
     $this->resetVariables();
 
@@ -316,7 +328,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
   /**
    * Test clearing using a cid.
    */
-  function clearCidTest() {
+  protected function clearCidTest() {
     cache_set('test_cid_clear', $this->default_value, $this->default_bin);
 
     $this->assertCacheExists(t('Cache was set for clearing cid.'), $this->default_value, 'test_cid_clear');
@@ -326,13 +338,9 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
 
     cache_set('test_cid_clear1', $this->default_value, $this->default_bin);
     cache_set('test_cid_clear2', $this->default_value, $this->default_bin);
-    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
-                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
-                      t('Two caches were created for checking cid "*" with wildcard false.'));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) && $this->checkCacheExists('test_cid_clear2', $this->default_value), t('Two caches were created for checking cid "*" with wildcard false.'));
     cache_clear_all('*', $this->default_bin);
-    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
-                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
-                      t('Two caches still exists after clearing cid "*" with wildcard false.'));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) && $this->checkCacheExists('test_cid_clear2', $this->default_value), t('Two caches still exists after clearing cid "*" with wildcard false.'));
   }
 
 }
