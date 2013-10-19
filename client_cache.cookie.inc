@@ -8,32 +8,33 @@
 class ClientCacheCookieDrupal implements DrupalCacheInterface {
 
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
   function __construct($bin) {
     $this->bin = $bin;
   }
 
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
-  function get($cid) {
+  public function get($cid) {
     $cids = array($cid);
     $cache = $this->getMultiple($cids);
     return reset($cache);
   }
 
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
-  function getMultiple(&$cids) {
+  public function getMultiple(&$cids) {
     try {
       $cache = array();
       foreach ($cids as $cid) {
         $item = new stdClass();
         if (isset($_COOKIE[$cid]) && !empty($_COOKIE[$cid])) {
-          // We use JSON as interchance format.
-          // This is due to the fact that sometimes we want to access data saved in cookies from JS.
+          // We use JSON as interchange format.
+          // This is due to the fact that sometimes we want to
+          // access data saved in cookies from JS.
           $item->data = drupal_json_decode($_COOKIE[$cid]);
         }
         else {
@@ -52,14 +53,15 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
   }
 
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
-  function set($cid_raw, $data, $expire = CACHE_PERMANENT) {
+  public function set($cid_raw, $data, $expire = CACHE_PERMANENT) {
     list($cid, $path) = self::getPathFromCid($cid_raw);
     $expire = $this->getExpirePeriod($expire);
     try {
       // We use JSON as interchance format.
-      // This is due to the fact that sometimes we want to access data saved in cookies from JS.
+      // This is due to the fact that sometimes we want to access
+      // data saved in cookies from JS.
       $data = drupal_json_encode($data);
       setcookie($cid, $data, $expire, $path);
     }
@@ -69,7 +71,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
   }
 
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
   function clear($cid_raw = NULL, $wildcard = FALSE) {
     list($cid, $path) = self::getPathFromCid($cid_raw);
@@ -78,9 +80,9 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
     }
   }
   /**
-   * {@inherits}
+   * {@inheritdoc}
    */
-  function isEmpty() {
+  public function isEmpty() {
   }
 
   /**
@@ -89,9 +91,10 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
    * Checks that items are either permanent or did not expire, and decodes
    * data as appropriate.
    *
-   * @param $cache
+   * @param  mixed $cache
    *   An item loaded from cache_get() or cache_get_multiple().
-   * @return
+   *
+   * @return mixed
    *   The item with data decoded as appropriate or FALSE if there is no
    *   valid item to load.
    */
@@ -103,23 +106,26 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
    * Provides cache period.
    *
    * @param int $expire
-   *  Integer of cache type or seconds to cache.
+   *   An integer of cache type or seconds to cache.
    *
    * @return int
-   *  Integer of time to cache.
+   *   An integer of time to cache.
    */
   protected function getExpirePeriod($expire) {
     switch ($expire) {
       case CACHE_PERMANENT:
-        // if its permanent, cache it for long time.
-        $expire = time()+(60*60*24*500);
+        // Cache it for long time for permanent.
+        // @TODO make as configurable variable?
+        $expire = time() + (60 * 60 * 24 * 500);
         break;
+
       case CACHE_TEMPORARY:
-        // set to remove cache on this session end.
+        // Set to remove cache on this session end.
         $expire = 0;
         break;
+
       default:
-        // if integer, consider it as seconds.
+        // If integer, consider it as seconds.
         if (is_int($expire)) {
           $expire = time() + $expire;
         }
@@ -127,6 +133,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
           $expire = 0;
         }
         break;
+
     }
     return $expire;
   }

@@ -30,10 +30,11 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
    *
    * @param string $cid
    *   The cache id.
-   * @param  string $var
+   * @param string $var
    *   The variable the cache should contain.
-   * @param  string $bin
+   * @param string $bin
    *   The bin the cache item was stored in.
+   *
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
@@ -83,7 +84,7 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
    * @param string  $bin
    *   The bin the cache item was stored in.
    */
-  function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
+  protected function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
     if ($bin == NULL) {
       $bin = $this->default_bin;
     }
@@ -166,7 +167,12 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
    * Tests the saving and restoring of an array.
    */
   public function testArray() {
-    $this->checkVariable(array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6')));
+    $variable = array(
+      'drupal1',
+      'drupal2' => 'drupal3',
+      'drupal4' => array('drupal5', 'drupal6')
+    );
+    $this->checkVariable($variable);
   }
 
   /**
@@ -176,7 +182,11 @@ class ClientCacheCookieSavingCase extends ClientCacheCookieTestCase {
     $test_object = new stdClass();
     $test_object->test1 = $this->randomName(100);
     $test_object->test2 = 100;
-    $test_object->test3 = array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6'));
+    $test_object->test3 = array(
+      'drupal1',
+      'drupal2' => 'drupal3',
+      'drupal4' => array('drupal5', 'drupal6')
+    );
 
     cache_set('test_object', $test_object, 'cache_client');
     $cache = cache_get('test_object', 'cache_client');
@@ -215,6 +225,9 @@ class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
   }
@@ -267,7 +280,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
     return array(
       'name' => 'Cache clear test',
       'description' => 'Check our clearing is done the proper way.',
-      'group' => 'Client Cache'
+      'group' => 'Client Cache',
     );
   }
 
@@ -319,7 +332,8 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
     // However permament items should stay in place.
     $this->assertTrue($this->checkCacheExists('test_cid_2', $this->default_value), 'Cache item was not cleared');
 
-    // If $_SESSION['cache_flush'] is not set, then the expired item should be returned.
+    // If $_SESSION['cache_flush'] is not set, then the expired item
+    // should be returned.
     unset($_SESSION['cache_flush']);
     $this->assertTrue($this->checkCacheExists('test_cid', $this->default_value), 'Cache item is still returned due to minimum cache lifetime.');
 

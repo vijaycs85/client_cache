@@ -1,7 +1,8 @@
 <?php
 
-/*
+/**
  * @file
- * The file contains functions to set & get values in cache
- *
+ * client_cache.cookie.inc must be configured in settings.php,
+ * and client_cache.module is not necessary to use client_cache
+ * as a cache backend.
  */
