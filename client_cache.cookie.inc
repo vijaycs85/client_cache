@@ -5,7 +5,7 @@
  * Contains implementation of DrupalCacheInterface with cookie logic included.
  */
 
-class CookieCacheDrupal implements DrupalCacheInterface {
+class ClientCacheCookieDrupal implements DrupalCacheInterface {
 
   /**
    * {@inherits}

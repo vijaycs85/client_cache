@@ -5,18 +5,18 @@
  */
 
 /**
- * Implements test cases for CookieCacheTestCase.
+ * Implements test cases for ClientCacheCookieTestCase.
  */
-class CookieCacheTestCase extends DrupalWebTestCase {
+class ClientCacheCookieTestCase extends DrupalWebTestCase {
   protected $default_bin = 'cache_client';
   protected $default_cid = 'test_temporary';
-  protected $default_value = 'CookieCacheTest';
+  protected $default_value = 'ClientCacheCookieTest';
 
   function setUp() {
     parent::setUp();
 
     variable_set("cache_flush_$this->default_bin", 0);
-    variable_set('cache_class_cache_client', 'CookieCacheDrupal');
+    variable_set('cache_class_cache_client', 'ClientCacheCookieDrupal');
 
     $this->resetVariables();
   }
@@ -109,7 +109,7 @@ class CookieCacheTestCase extends DrupalWebTestCase {
   }
 }
 
-class CookieCacheSavingCase extends MemcacheTestCase {
+class ClientCacheCookieSavingCase extends MemcacheTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Cookie cache saving test',
@@ -177,7 +177,7 @@ class CookieCacheSavingCase extends MemcacheTestCase {
 /**
  * Test cache_get_multiple().
  */
-class ClientCacheMultipleUnitTest extends CookieCacheTestCase {
+class ClientCacheMultipleUnitTest extends ClientCacheCookieTestCase {
 
   public static function getInfo() {
     return array(
@@ -227,7 +227,7 @@ class ClientCacheMultipleUnitTest extends CookieCacheTestCase {
 /**
  * Test cache clearing methods.
  */
-class CookieCacheClearCase extends CookieCacheTestCase {
+class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Cache clear test',
