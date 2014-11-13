@@ -21,8 +21,6 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
     include_once drupal_get_path('module', 'client_cache') . '/client_cache.cookie.inc';
     variable_set("cache_flush_$this->defaultBin", 0);
     variable_set('cache_class_cache_client', 'ClientCacheCookieDrupal');
-
-    $this->resetVariables();
   }
 
   /**
@@ -108,13 +106,6 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
     }
 
     cache_clear_all(NULL, $bin);
-  }
-
-  /**
-   * Resets the cache variable.
-   */
-  protected function resetVariables() {
-    _cache_get_object($this->defaultBin)->reloadVariables();
   }
 
 }
@@ -315,7 +306,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
    */
   public function testClearCacheLifetime() {
     variable_set('cache_lifetime', 600);
-    $this->resetVariables();
+    
 
     // Set a cache item with an expiry.
     cache_set('test_cid', $this->defaultValue, $this->defaultBin, time() + 3600);
@@ -350,7 +341,7 @@ class ClientCacheCookieClearCase extends ClientCacheCookieTestCase {
     // Reset the cache clear variables.
     variable_set('cache_content_flush_' . $this->defaultBin, 0);
     variable_set('cache_lifetime', 6000);
-    $this->resetVariables();
+    
     sleep(1);
 
     // Confirm that cache_lifetime does not take effect for full bin flushes.
