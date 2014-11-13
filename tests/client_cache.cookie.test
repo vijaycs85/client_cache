@@ -18,7 +18,7 @@ class ClientCacheCookieTestCase extends DrupalWebTestCase {
    */
   protected function setUp() {
     parent::setUp();
-
+    include_once drupal_get_path('module', 'client_cache') . '/client_cache.cookie.inc';
     variable_set("cache_flush_$this->defaultBin", 0);
     variable_set('cache_class_cache_client', 'ClientCacheCookieDrupal');
 

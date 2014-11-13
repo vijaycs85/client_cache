@@ -8,6 +8,11 @@
 class ClientCacheCookieDrupal implements DrupalCacheInterface {
 
   /**
+   * Cache 1 year(365 days) for permanent cache.
+   */
+  const CACHE_PERMANENT_PERIOD = 31536000;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($bin) {
@@ -115,8 +120,7 @@ class ClientCacheCookieDrupal implements DrupalCacheInterface {
     switch ($expire) {
       case CACHE_PERMANENT:
         // Cache it for long time for permanent.
-        // @TODO make as configurable variable?
-        $expire = time() + (60 * 60 * 24 * 500);
+        $expire = time() + self::CACHE_PERMANENT_PERIOD;
         break;
 
       case CACHE_TEMPORARY:
