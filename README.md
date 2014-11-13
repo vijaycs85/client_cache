@@ -9,8 +9,6 @@ Status
 <a href="https://travis-ci.org/vijaycs85/client_cache" target="_blank"><img src="https://travis-ci.org/vijaycs85/client_cache.svg?branch=7.x-1.x" /></a>
 <a href="https://insight.sensiolabs.com/projects/9986732d-3327-444f-900a-d752f76d23b4" target="_blank"><img src="https://insight.sensiolabs.com/projects/9986732d-3327-444f-900a-d752f76d23b4/mini.png" /></a>
 
-
-
 Installation
 -----------
 
